@@ -1,0 +1,124 @@
+/* Custom Styles & Rich Design Tokens for Brothers Jet Set Go Travels & Services */
+
+:root {
+  --brand-darkest: #071610;
+  --brand-dark: #0d281e;
+  --brand-surface: #113528;
+  --brand-surface-alt: #163f30;
+  --brand-primary: #059669;
+  --brand-primary-light: #10b981;
+  --brand-accent: #eab308;
+  --brand-accent-hover: #ca8a04;
+  --brand-gold-light: #fef08a;
+}
+
+/* Base resets & tap highlights */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  background-color: #05130d;
+}
+
+/* Glow & Ambient lighting */
+.hero-glow {
+  background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.22) 0%, rgba(13, 40, 30, 0.95) 75%, #071610 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071610;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #163f30;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+/* Card Subtle Elevation & Hover Effects */
+.feature-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(5, 150, 105, 0.15);
+}
+
+/* Accordion Animation */
+.faq-content {
+  transition: all 0.25s ease-in-out;
+}
+
+.faq-item[data-open="true"] {
+  border-color: #a7f3d0;
+  box-shadow: 0 4px 12px -2px rgba(5, 150, 105, 0.08);
+}
+
+/* Mobile Frame Preview Styling (when view-mobile is active) */
+#app-shell.mobile-view {
+  max-width: 414px;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1f2937, 0 0 0 14px #374151;
+  border-radius: 36px;
+  overflow: hidden;
+}
+
+#app-shell.mobile-view nav,
+body.mobile-view-active nav {
+  display: none !important;
+}
+
+#app-shell.mobile-view header button,
+body.mobile-view-active header button {
+  display: none !important;
+}
+
+#app-shell.mobile-view header a[aria-label="Call office"] span,
+body.mobile-view-active header a[aria-label="Call office"] span {
+  display: none !important;
+}
+
+#app-shell.mobile-view aside[aria-label="Quick contact"],
+body.mobile-view-active aside[aria-label="Quick contact"] {
+  display: block !important;
+  position: sticky;
+  bottom: 0;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+#app-shell.mobile-view header {
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+/* Modal Dialog */
+dialog#inquiry-modal[open] {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
