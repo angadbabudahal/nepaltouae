@@ -57,14 +57,18 @@ body {
   box-shadow: 0 12px 24px -10px rgba(5, 150, 105, 0.15);
 }
 
-/* Accordion Animation */
+/* Accordion Animation & Design */
 .faq-content {
-  transition: all 0.25s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.faq-item {
+  border-radius: 1rem;
 }
 
 .faq-item[data-open="true"] {
-  border-color: #a7f3d0;
-  box-shadow: 0 4px 12px -2px rgba(5, 150, 105, 0.08);
+  border-color: #6ee7b7 !important;
+  box-shadow: 0 4px 16px -2px rgba(16, 185, 129, 0.12);
 }
 
 /* Mobile Frame Preview Styling (when view-mobile is active) */

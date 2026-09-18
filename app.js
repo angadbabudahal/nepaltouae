@@ -42,13 +42,15 @@ function initFaqAccordion() {
       faqItems.forEach(otherItem => {
         if (otherItem !== item) {
           otherItem.setAttribute('data-open', 'false');
+          otherItem.classList.remove('border-2', 'border-[#6ee7b7]', 'shadow-md');
+          otherItem.classList.add('border', 'border-slate-200');
           const otherContent = otherItem.querySelector('.faq-content');
           const otherIcon = otherItem.querySelector('.faq-icon');
           if (otherContent) otherContent.classList.add('hidden');
           if (otherIcon) {
             otherIcon.textContent = '+';
-            otherIcon.classList.remove('bg-emerald-100', 'text-brand-primary');
-            otherIcon.classList.add('bg-slate-100', 'text-slate-600');
+            otherIcon.classList.remove('bg-[#065f46]', 'text-white');
+            otherIcon.classList.add('bg-slate-100', 'text-slate-700');
           }
         }
       });
@@ -57,18 +59,22 @@ function initFaqAccordion() {
       if (isOpen) {
         item.setAttribute('data-open', 'false');
         if (content) content.classList.add('hidden');
+        item.classList.remove('border-2', 'border-[#6ee7b7]', 'shadow-md');
+        item.classList.add('border', 'border-slate-200');
         if (icon) {
           icon.textContent = '+';
-          icon.classList.remove('bg-emerald-100', 'text-brand-primary');
-          icon.classList.add('bg-slate-100', 'text-slate-600');
+          icon.classList.remove('bg-[#065f46]', 'text-white');
+          icon.classList.add('bg-slate-100', 'text-slate-700');
         }
       } else {
         item.setAttribute('data-open', 'true');
         if (content) content.classList.remove('hidden');
+        item.classList.add('border-2', 'border-[#6ee7b7]', 'shadow-md');
+        item.classList.remove('border-slate-200');
         if (icon) {
           icon.textContent = '−';
-          icon.classList.remove('bg-slate-100', 'text-slate-600');
-          icon.classList.add('bg-emerald-100', 'text-brand-primary');
+          icon.classList.remove('bg-slate-100', 'text-slate-700');
+          icon.classList.add('bg-[#065f46]', 'text-white');
         }
       }
     });
