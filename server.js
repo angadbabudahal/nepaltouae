@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -11,10 +11,22 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.json': 'application/json',
 };
 
-const server = http.createServer((req, res) => {
-  let reqUrl = req.url.split('?')[0];
+function requestHandler(req, res) {
+  let reqUrl = (req.url || '/').split('?')[0];
+
+  if (reqUrl === '/favicon.ico') {
+    const icoPath = path.join(__dirname, 'favicon.ico');
+    if (fs.existsSync(icoPath)) {
+      res.writeHead(200, { 'Content-Type': 'image/x-icon' });
+      return res.end(fs.readFileSync(icoPath));
+    }
+    res.writeHead(204);
+    return res.end();
+  }
+
   let filePath = path.join(__dirname, reqUrl === '/' ? 'index.html' : reqUrl);
 
   fs.stat(filePath, (err, stats) => {
@@ -35,8 +47,14 @@ const server = http.createServer((req, res) => {
       res.end(content);
     });
   });
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Nepal to Dubai package site running at http://localhost:${PORT}`);
-});
+const server = http.createServer(requestHandler);
+
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Nepal to Dubai package site running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = server;
