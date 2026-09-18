@@ -226,8 +226,22 @@ if (typeof module !== 'undefined' && module.exports) {
     }
 
     const cleanPath = reqUrl.startsWith('/') ? reqUrl.slice(1) : reqUrl;
-    const filePath = path.join(process.cwd(), cleanPath);
+    const candidatePaths = [
+      path.join(__dirname, cleanPath),
+      path.join(process.cwd(), cleanPath),
+    ];
 
+    let resolvedFile = null;
+    for (const p of candidatePaths) {
+      try {
+        if (fs.existsSync(p) && fs.statSync(p).isFile()) {
+          resolvedFile = p;
+          break;
+        }
+      } catch (e) {}
+    }
+
+    const ext = path.extname(cleanPath).toLowerCase();
     const MIME_TYPES = {
       '.html': 'text/html; charset=utf-8',
       '.css': 'text/css; charset=utf-8',
@@ -239,19 +253,32 @@ if (typeof module !== 'undefined' && module.exports) {
       '.json': 'application/json',
     };
 
-    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-      const ext = path.extname(filePath).toLowerCase();
+    if (resolvedFile) {
       res.statusCode = 200;
       res.setHeader('Content-Type', MIME_TYPES[ext] || 'application/octet-stream');
-      return res.end(fs.readFileSync(filePath));
+      return res.end(fs.readFileSync(resolvedFile));
     }
 
-    // Fallback to index.html for root routes
-    const indexPath = path.join(process.cwd(), 'index.html');
-    if (fs.existsSync(indexPath)) {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      return res.end(fs.readFileSync(indexPath));
+    // Never return HTML for static assets like CSS, JS, images
+    if (['.css', '.js', '.png', '.jpg', '.ico', '.svg'].includes(ext)) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+      return res.end('Asset Not Found');
+    }
+
+    // Fallback to index.html for page routes
+    const indexCandidates = [
+      path.join(__dirname, 'index.html'),
+      path.join(process.cwd(), 'index.html'),
+    ];
+    for (const p of indexCandidates) {
+      try {
+        if (fs.existsSync(p)) {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
+          return res.end(fs.readFileSync(p));
+        }
+      } catch (e) {}
     }
 
     res.statusCode = 404;

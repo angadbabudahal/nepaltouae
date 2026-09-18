@@ -48,7 +48,63 @@
     };
   </script>
 
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
+  <style>
+    /* Custom Styles & Rich Design Tokens for Brothers Jet Set Go Travels & Services */
+    :root {
+      --brand-darkest: #071610;
+      --brand-dark: #0d281e;
+      --brand-surface: #113528;
+      --brand-surface-alt: #163f30;
+      --brand-primary: #059669;
+      --brand-primary-light: #10b981;
+      --brand-accent: #eab308;
+      --brand-accent-hover: #ca8a04;
+      --brand-gold-light: #fef08a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      -webkit-tap-highlight-color: transparent;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+      background-color: #05130d;
+    }
+    .hero-glow {
+      background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.22) 0%, rgba(13, 40, 30, 0.95) 75%, #071610 100%);
+    }
+    .feature-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -10px rgba(5, 150, 105, 0.15);
+    }
+    /* FAQ Accordion Styling matching user reference images */
+    .faq-content { transition: all 0.2s ease-in-out; }
+    .faq-item { border-radius: 1rem; }
+    .faq-item[data-open="true"] {
+      border-color: #6ee7b7 !important;
+      box-shadow: 0 4px 16px -2px rgba(16, 185, 129, 0.12);
+    }
+    #app-shell.mobile-view {
+      max-width: 414px;
+      margin-top: 1.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1f2937, 0 0 0 14px #374151;
+      border-radius: 36px;
+      overflow: hidden;
+    }
+    #app-shell.mobile-view nav, body.mobile-view-active nav { display: none !important; }
+    #app-shell.mobile-view header button, body.mobile-view-active header button { display: none !important; }
+    #app-shell.mobile-view header a[aria-label="Call office"] span, body.mobile-view-active header a[aria-label="Call office"] span { display: none !important; }
+    #app-shell.mobile-view aside[aria-label="Quick contact"], body.mobile-view-active aside[aria-label="Quick contact"] {
+      display: block !important;
+      position: sticky;
+      bottom: 0;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+    #app-shell.mobile-view header { border-top-left-radius: 24px; border-top-right-radius: 24px; }
+    dialog#inquiry-modal[open] { display: flex; animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+  </style>
 </head>
 <body class="bg-slate-900 text-slate-800 font-sans antialiased selection:bg-brand-primary selection:text-white min-h-screen">
 
@@ -1144,6 +1200,145 @@
   </dialog>
 
   <!-- Application Logic Scripts -->
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
+  <script>
+    (function() {
+      if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+      function initFAQ() {
+        const items = document.querySelectorAll('.faq-item');
+        items.forEach(function(item) {
+          const btn = item.querySelector('.faq-toggle');
+          const content = item.querySelector('.faq-content');
+          const icon = item.querySelector('.faq-icon');
+          if (!btn) return;
+
+          btn.onclick = function() {
+            const isOpen = item.getAttribute('data-open') === 'true';
+            items.forEach(function(other) {
+              if (other !== item) {
+                other.setAttribute('data-open', 'false');
+                other.classList.remove('border-2', 'border-[#6ee7b7]', 'shadow-md');
+                other.classList.add('border', 'border-slate-200');
+                const otherContent = other.querySelector('.faq-content');
+                const otherIcon = other.querySelector('.faq-icon');
+                if (otherContent) otherContent.classList.add('hidden');
+                if (otherIcon) {
+                  otherIcon.textContent = '+';
+                  otherIcon.classList.remove('bg-[#065f46]', 'text-white');
+                  otherIcon.classList.add('bg-slate-100', 'text-slate-700');
+                }
+              }
+            });
+
+            if (isOpen) {
+              item.setAttribute('data-open', 'false');
+              if (content) content.classList.add('hidden');
+              item.classList.remove('border-2', 'border-[#6ee7b7]', 'shadow-md');
+              item.classList.add('border', 'border-slate-200');
+              if (icon) {
+                icon.textContent = '+';
+                icon.classList.remove('bg-[#065f46]', 'text-white');
+                icon.classList.add('bg-slate-100', 'text-slate-700');
+              }
+            } else {
+              item.setAttribute('data-open', 'true');
+              if (content) content.classList.remove('hidden');
+              item.classList.add('border-2', 'border-[#6ee7b7]', 'shadow-md');
+              item.classList.remove('border-slate-200');
+              if (icon) {
+                icon.textContent = '−';
+                icon.classList.remove('bg-slate-100', 'text-slate-700');
+                icon.classList.add('bg-[#065f46]', 'text-white');
+              }
+            }
+          };
+        });
+      }
+
+      function initViewMode() {
+        const desktopBtn = document.getElementById('view-desktop-btn');
+        const mobileBtn = document.getElementById('view-mobile-btn');
+        const appShell = document.getElementById('app-shell');
+        if (!desktopBtn || !mobileBtn || !appShell) return;
+
+        desktopBtn.onclick = function() {
+          appShell.classList.remove('mobile-view');
+          if (document.body) document.body.classList.remove('mobile-view-active');
+          desktopBtn.classList.add('bg-brand-primary', 'text-white', 'shadow');
+          desktopBtn.classList.remove('text-slate-400');
+          mobileBtn.classList.remove('bg-brand-primary', 'text-white', 'shadow');
+          mobileBtn.classList.add('text-slate-400');
+        };
+
+        mobileBtn.onclick = function() {
+          appShell.classList.add('mobile-view');
+          if (document.body) document.body.classList.add('mobile-view-active');
+          mobileBtn.classList.add('bg-brand-primary', 'text-white', 'shadow');
+          mobileBtn.classList.remove('text-slate-400');
+          desktopBtn.classList.remove('bg-brand-primary', 'text-white', 'shadow');
+          desktopBtn.classList.add('text-slate-400');
+        };
+      }
+
+      window.openInquiryModal = function() {
+        const modal = document.getElementById('inquiry-modal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.setAttribute('open', '');
+          if (document.body) document.body.style.overflow = 'hidden';
+          const nameInput = document.getElementById('applicant-name');
+          if (nameInput) nameInput.focus();
+        }
+      };
+
+      window.closeInquiryModal = function() {
+        const modal = document.getElementById('inquiry-modal');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.removeAttribute('open');
+          if (document.body) document.body.style.overflow = '';
+        }
+      };
+
+      window.handleFormSubmit = function(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        const name = document.getElementById('applicant-name')?.value.trim() || '';
+        const phone = document.getElementById('applicant-phone')?.value.trim() || '';
+        const airport = document.getElementById('visa-airport')?.value || '';
+        const travelDate = document.getElementById('travel-date')?.value || '';
+        const hasPassport = document.getElementById('doc-passport')?.checked ? 'Yes' : 'No';
+        const hasPhoto = document.getElementById('doc-photo')?.checked ? 'Yes' : 'No';
+        const hasCitizenship = document.getElementById('doc-citizenship')?.checked ? 'Yes' : 'No';
+
+        const message = "Hello Brothers Jet Set Go Travels & Services,\n" +
+          "I would like to apply for the Nepal to Dubai Visit Visa Full Package (NPR 135,000).\n\n" +
+          "My Details:\n" +
+          "• Name: " + name + "\n" +
+          "• Contact: " + phone + "\n" +
+          "• Preferred Entry: " + airport + "\n" +
+          "• Travel Timeline: " + travelDate + "\n" +
+          "• Documents Ready:\n" +
+          "  - Passport: " + hasPassport + "\n" +
+          "  - Photo: " + hasPhoto + "\n" +
+          "  - Citizenship: " + hasCitizenship + "\n\n" +
+          "Please let me know the next steps for document submission.";
+
+        const whatsappUrl = "https://wa.me/9779816386563?text=" + encodeURIComponent(message);
+        window.closeInquiryModal();
+        if (window.open) window.open(whatsappUrl, '_blank');
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          initFAQ();
+          initViewMode();
+        });
+      } else {
+        initFAQ();
+        initViewMode();
+      }
+    })();
+  </script>
 </body>
 </html>
